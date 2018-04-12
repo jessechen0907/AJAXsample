@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>demo</title>
+<style>
+	*{
+		font-size: 30px;
+		font-family: 'Microsoft Yahei';
+		line-height: 1.8em;
+	}	
+</style>
+</head>
+
+<body>
+<h1>查询员工</h1>
+<label>员工编号</label>
+<input type="text" id="keyword" />
+<button id="search">查询</button>
+<p id="res"></p>
+<h1>新增员工</h1>
+<label>员工编号</label>
+<input type="text" id="num" /><br />
+<label>员工姓名</label>
+<input type="text" id="name" /><br />
+<label>员工性别</label>
+<select id="gender">
+	<option>男</option>
+	<option>女</option>
+</select><br />
+<label>员工职位</label>
+<input type="text" id="position" /><br />
+<button id="newmem">新增</button>
+<p id="newres"></p>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script>
+$(document).ready(function(){
+	$('#search').click(function(){
+		$.ajax({
+			type:"GET",
+			url:"http://127.0.0.1:8080/ajaxdemo/employee.php?number=" + $('#keyword').val(),
+			dataType:'json',
+			/*jsonp:"callback",*/
+			success:function(data){
+				if(data.success){
+						$('#res').html(data.msg);
+					}else{
+						$('#res').html("OPPOS~~~" + data.msg);
+					}
+			},
+			error:function(jqXHR){
+				alert('OPPOS~~~  '+jqXHR.status);
+			}
+		});
+	});
+	$('#newmem').click(function(){
+		$.ajax({
+			type:"POST",
+			url:"http://127.0.0.1:8080/ajaxdemo/employee.php",
+			dataType:'json',
+			data:{
+				number:$('#num').val(),
+				name:$('#name').val(),
+				sex:$('#gender').val(),
+				job:$('#position').val(),
+			},
+			success:function(data){
+				if(data.success){
+						$('#newres').html(data.msg);
+					}else{
+						$('#newres').html("OPPOS~~~" + data.msg);
+					}
+			},
+			error:function(jqXHR){
+				alert('OPPOS~~~  '+jqXHR.status);
+			}
+		});
+	});
+});	
+</script>
+
+<!--<script>
+document.getElementById('search').onclick=function(){
+	var req=new XMLHttpRequest();
+		req.open("GET","employee.php?number=" + document.getElementById('keyword').value);
+		req.send();
+		req.onreadystatechange=function(){
+			if(req.readyState===4){
+				if(req.status===200){
+					var data=JSON.parse(req.responseText);
+					if(data.success){
+						document.getElementById('res').innerHTML=data.msg;
+					}else{
+						
+						document.getElementById('res').innerHTML="OPPOS~~~" + data.msg;
+					}
+					
+				}else{
+					alert('OPPOS~~~  '+req.status);
+				}
+			}
+		}
+}
+document.getElementById('newmem').onclick=function(){
+	var req=new XMLHttpRequest();
+		req.open("POST","employee.php");
+		var date="number="+document.getElementById('num').value
+				 +"&name="+document.getElementById('name').value
+				 +"&sex="+document.getElementById('gender').value
+				 +"&job="+document.getElementById('position').value;
+		req.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+		req.send(date);
+		req.onreadystatechange=function(){
+			if(req.readyState===4){
+				if(req.status===200){
+					var data=JSON.parse(req.responseText);
+					if(data.success){
+						document.getElementById('newres').innerHTML=data.msg;
+					}else{
+						document.getElementById('newres').innerHTML='OPPOS~~~'+data.msg;
+					}
+					
+				}else{
+					alert('OPPOS~~~  '+req.status);
+				}
+			}
+		}
+}
+</script>-->
+</body>
+</html>
